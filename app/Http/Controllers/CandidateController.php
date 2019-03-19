@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Candidate;
+use App\Http\Resources\CandidateResource;
+use App\Http\Resources\CandidateCollection;
 use Illuminate\Http\Request;
 
 class CandidateController extends Controller
@@ -13,7 +16,7 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        //
+        return new CandidateCollection(Candidate::all());
     }
 
     /**
@@ -34,7 +37,16 @@ class CandidateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $candidate = Candidate::create($request->all());
+
+        // $candidate = new Candidate;
+        // $candidate->fill($request->all());
+        // $candidate->save();
+
+        return response()->json([
+            'id' => $candidate->id,
+            'created_at' => $candidate->created_at,
+        ], 201);;
     }
 
     /**
@@ -45,7 +57,16 @@ class CandidateController extends Controller
      */
     public function show($id)
     {
-        //
+        $candidate = Candidate::with('party')->find($id);
+
+        if(!$candidate){
+            return response()->json([
+                'error' => 404,
+                'message' => 'Not found',
+            ], 404);
+        }
+
+        return new CandidateResource($candidate);
     }
 
     /**
@@ -68,7 +89,18 @@ class CandidateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $candidate = Candidate::find($id);
+
+        if(!$candidate) {
+            return response()->json([
+                'error' => 404,
+                'message' => 'Not found'
+            ], 404);
+        }
+
+        $candidate->update($request->all());
+
+        return response()->json(null, 204);
     }
 
     /**
@@ -79,6 +111,14 @@ class CandidateController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $candidate = Candidate::find($id);
+        if(!$candidate) {
+            return response()->json([
+                'error' => 404,
+                'message' => 'Not found'
+            ], 404);
+        }
+        $book->delete();
+        return response()->json(null, 204);
     }
 }

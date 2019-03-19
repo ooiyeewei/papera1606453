@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Party;
+use App\Http\Resources\PartyResource;
+use App\Http\Resources\PartyCollection;
 use Illuminate\Http\Request;
 
 class PartyController extends Controller
@@ -13,7 +16,7 @@ class PartyController extends Controller
      */
     public function index()
     {
-        //
+        return new PartyCollection(Party::all());
     }
 
     /**
@@ -34,7 +37,13 @@ class PartyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $party = Party::create($request->all());
+
+        return response()->json([
+            'id' => $party->id,
+            'name' => $party->name,
+            'created_at' => $party->created_at,
+        ], 201);;
     }
 
     /**

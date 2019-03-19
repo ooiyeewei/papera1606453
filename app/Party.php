@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Candidate;
 use Illuminate\Database\Eloquent\Model;
 
 class Party extends Model
