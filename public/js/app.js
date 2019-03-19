@@ -41349,56 +41349,141 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-var Example = function (_Component) {
-    _inherits(Example, _Component);
+var Candidates = function (_Component) {
+    _inherits(Candidates, _Component);
 
-    function Example() {
-        _classCallCheck(this, Example);
+    function Candidates(props) {
+        _classCallCheck(this, Candidates);
 
-        return _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (Candidates.__proto__ || Object.getPrototypeOf(Candidates)).call(this, props));
+
+        _this.state = {
+            candidates: null
+        };
+        return _this;
     }
 
-    _createClass(Example, [{
+    _createClass(Candidates, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            var url = '/api/candidates';
+
+            fetch(url, {
+                headers: {
+                    Accept: 'application/json'
+                },
+                credentials: 'same-origin'
+            }).then(function (response) {
+                if (!response.ok) throw Error([response.status, response.statusText].join(' '));
+
+                return response.json();
+            }).then(function (body) {
+                _this2.setState({
+                    candidates: body.data
+                });
+            }).catch(function (error) {
+                return alert(error);
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
-            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'container' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { className: 'row' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'col-md-8 col-md-offset-2' },
+            var candidates = this.state.candidates;
+
+
+            var content = void 0;
+
+            if (!candidates) {
+                content = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'p',
+                    null,
+                    'Loading data...'
+                );
+            } else if (candidates.length == 0) {
+                content = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'p',
+                    null,
+                    'No candidates in record'
+                );
+            } else {
+                var items = candidates.map(function (candidate) {
+                    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'tr',
+                        { key: candidate.id },
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'panel panel-default' },
+                            'td',
+                            null,
+                            candidate.name
+                        ),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'td',
+                            null,
+                            candidate.party_id
+                        )
+                    );
+                });
+
+                content = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'table-responsive' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'table',
+                        { className: 'table table-bordered table-hover' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'thead',
+                            null,
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'panel-heading' },
-                                'Example Component'
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'panel-body' },
-                                'I\'m an example component!'
+                                'tr',
+                                null,
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'th',
+                                    null,
+                                    'ID'
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'th',
+                                    null,
+                                    'Name'
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'th',
+                                    null,
+                                    'Party ID'
+                                )
                             )
+                        ),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'tbody',
+                            null,
+                            items
                         )
                     )
-                )
+                );
+            }
+
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'content-wrapper' },
+                content
             );
         }
     }]);
 
-    return Example;
+    return Candidates;
 }(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);
 
-/* harmony default export */ __webpack_exports__["default"] = (Example);
+/* harmony default export */ __webpack_exports__["default"] = (Candidates);
 
 
-if (document.getElementById('example')) {
-    __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Example, null), document.getElementById('example'));
-}
+(function () {
+    var element = document.getElementById('content-candidates');
+
+    if (element) {
+        __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('candidates', null), element);
+    }
+})();
 
 /***/ }),
 /* 116 */
